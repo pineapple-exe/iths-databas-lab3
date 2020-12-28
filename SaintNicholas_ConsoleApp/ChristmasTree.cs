@@ -17,7 +17,7 @@ namespace SaintNicholas_ConsoleApp
 		static char[] decorations;
 		static ConsoleColor[] decorColorAlternatives;
 
-		static char decorationSpot = '#';
+		static readonly char decorationSpot = '#';
 
 		private static void CreateTree()
         {

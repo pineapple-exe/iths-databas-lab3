@@ -1,6 +1,7 @@
 ﻿using SaintNicholas.Data;
 using SaintNicholas.Data.DataHandlers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -146,26 +147,19 @@ namespace SaintNicholas_ConsoleApp
             }
         }
 
-        private static void AddChild(SaintNicholasDbContext context, string[] questions, string[] propertyValues)
+        private static void AddChild(SaintNicholasDbContext context, string[] propertyValues)
         {
-            for (int i = 0; i < questions.Length; i++)
-            {
-                if (i != 1)
-                {
-                    if (!RepeatableReadline(questions[i], s => null, out propertyValues[i]))
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (!RepeatableReadline(questions[i], GenderValidator, out propertyValues[i]))
-                    {
-                        return;
-                    }
-                }
-            }
+            Console.WriteLine("Enter empty string to cancel this process.");
+
+            if (!RepeatableReadline("Name: ", s => null, out propertyValues[0])) return;
+            if (!RepeatableReadline("Gender (girl/boy/u): ", GenderValidator, out propertyValues[1])) return;
+            if (!RepeatableReadline("Street address: ", s => null, out propertyValues[2])) return;
+            if (!RepeatableReadline("Postal code: ", s => null, out propertyValues[3])) return;
+            if (!RepeatableReadline("City: ", s => null, out propertyValues[4])) return;
+            if (!RepeatableReadline("And lastly... Country: ", s => null, out propertyValues[5])) return;
+
             ChildrenHandler.AddData(context, propertyValues);
+
             Console.WriteLine("Child successfully added to database.");
             Console.WriteLine("Press Enter to return to menu.");
             Console.ReadLine();
@@ -183,12 +177,13 @@ namespace SaintNicholas_ConsoleApp
             var propertySetters = ChildrenHandler.PropertySetters();
 
             Console.WriteLine("Enter empty string to keep old data.");
+
             RepeatableReadline("Name: ", s => null, out propertyValues[0]);
             RepeatableReadline("Gender (girl/boy/u): ", GenderValidator, out propertyValues[1]);
             RepeatableReadline("Street address: ", s => null, out propertyValues[2]);
             RepeatableReadline("Postal code: ", s => null, out propertyValues[3]);
             RepeatableReadline("City: ", s => null, out propertyValues[4]);
-            RepeatableReadline("And lastly.. Country: ", s => null, out propertyValues[5]);
+            RepeatableReadline("And lastly... Country: ", s => null, out propertyValues[5]);
 
             bool done = false;
             for (int i = 0; i < propertyValues.Length; i++)
@@ -203,6 +198,7 @@ namespace SaintNicholas_ConsoleApp
             if (!done)
             {
                 ChildrenHandler.UpdateData(context, childToEdit);
+
                 Console.WriteLine("Child successfully edited.");
                 Console.WriteLine("Press Enter to return to menu.");
                 Console.ReadLine();
@@ -243,7 +239,7 @@ namespace SaintNicholas_ConsoleApp
             {
                 return;
             }
-            if (!RepeatableReadline("And lastly.. For naughty children (y/n): ", BoolValidator, out propertyValues[2]))
+            if (!RepeatableReadline("And lastly... For naughty children (y/n): ", BoolValidator, out propertyValues[2]))
             {
                 return;
             }
@@ -273,27 +269,34 @@ namespace SaintNicholas_ConsoleApp
             }
         }
 
+        private static void DemandsDetails(int[] behavioralDemands, Dictionary<Gender, int>[] genderedDemands, params string[] typeNotes)
+        {
+            for (int i = 0; i < behavioralDemands.Length; i++)
+            {
+                Console.WriteLine($" {typeNotes[i]}: {behavioralDemands[i]} =");
+                Console.WriteLine($"        Girls: {genderedDemands[i][Gender.Girl]}");
+                Console.WriteLine($"        Boys: {genderedDemands[i][Gender.Boy]}");
+                Console.WriteLine($"        Others: {genderedDemands[i][Gender.Other]}");
+                Console.WriteLine();
+            }
+        }
+
         private static void CheckDemands(SaintNicholasDbContext context)
         {
             Demands demands = Demands.CheckDemands(context);
 
             if (demands.Diff > 0)
             {
-                Console.WriteLine($"Number of presents missing: {demands.Diff}");
-                Console.WriteLine("Out of which..");
+                Console.WriteLine($"Presents yet to be handed out: {demands.Diff}");
+                Console.WriteLine("Out of which...");
                 Console.WriteLine();
-                Console.WriteLine($"Fun presents: {demands.FunNumDemand} ");
-                Console.WriteLine($"             Girls: {demands.GoodGirls}");
-                Console.WriteLine($"             Boys: {demands.GoodBoys}");
-                Console.WriteLine();
-                Console.WriteLine($"Dull presents: {demands.DullNumDemand}");
-                Console.WriteLine($"            Girls: {demands.NaughtyGirls}");
-                Console.WriteLine($"            Boys: {demands.NaughtyBoys}");
-                Console.WriteLine();
-                Console.WriteLine($"Yet to be evaluated: {demands.BlankNumDemand}");
-                Console.WriteLine($"            Girls: {demands.UnevaluatedGirls}");
-                Console.WriteLine($"            Boys: {demands.UnevaluatedBoys}");
-                Console.WriteLine();
+
+                int[] behavioralDemands = new int[] { demands.FunNum, demands.DullNum, demands.BlankNum };
+                Dictionary<Gender, int>[] genderedDemands = new Dictionary<Gender, int>[] { demands.GoodGendersNum, demands.NaughtyGendersNum, demands.UnevaluatedGendersNum };
+                DemandsDetails(behavioralDemands, genderedDemands, "Fun presents", "Dull presents", "Unknown quality presents");
+
+                Console.WriteLine("These numbers represent existent or non-existent presents;");
+                Console.WriteLine("use [Match presents with children] to keep these numbers reflective of the production demand.");
             }
             else
             {
@@ -306,6 +309,7 @@ namespace SaintNicholas_ConsoleApp
         private static void MatchPresents(SaintNicholasDbContext context)
         {
             int matches = ChristmasPresentsHandler.Match(context);
+            context.SaveChanges();
             
             if (matches > 0)
             {
@@ -321,27 +325,89 @@ namespace SaintNicholas_ConsoleApp
             Console.ReadLine();
         }
 
+        private static string Ellipsis(string propertyValue, int maxLength)
+        {
+            if (propertyValue.Length > maxLength)
+            {
+                propertyValue = propertyValue.Substring(0, maxLength - 3) + "...";
+            }
+            return propertyValue;
+        }
+
+        private static List<string> ChildStrings(List<Child> theChildren)
+        {
+            var theStrings = new List<string>();
+
+            foreach (Child c in theChildren)
+            {
+                string id = Ellipsis(c.Id.ToString(), 5);
+                string name = Ellipsis(c.Name.ToString(), 15);
+                string street = Ellipsis(c.StreetAddress.ToString(), 25);
+                string zip = Ellipsis(c.PostalCode.ToString(), 10);
+                string city = Ellipsis(c.City.ToString(), 15);
+                string country = Ellipsis(c.Country.ToString(), 20);
+
+                string childString = $"{id, -5} | {name, -15} | {street, -25} | {zip, -10} | {city, -15} | {country, -20}";
+
+                theStrings.Add(childString);
+            }
+            return theStrings;
+        }
+
+        private static void CheckGingerBreadDemand(SaintNicholasDbContext context, bool naughty)
+        {
+            string adjective = naughty ? "naughty" : "good";
+            string suggestion = naughty ? "we respond to a potential dire need of gingerbread abundance" :
+                                           "their exposure to gingerbread is restricted";
+
+            List<Child> whoNeedsIt = BehavioralRecordsHandler.GeneralGingerBread(context, naughty);
+            List<string> childStrings = ChildStrings(whoNeedsIt);
+
+            if (childStrings == null)
+            {
+                Console.WriteLine("No such records.");
+                Console.WriteLine("Press Enter to return to menu.");
+                Console.ReadLine();
+                return;
+            }
+
+            Console.WriteLine($"Following children have been {adjective} the past three years.");
+            Console.WriteLine($"It is therefore suggested that {suggestion}.");
+            Console.WriteLine();
+
+            string columnLabels = $"{"Id", -5} | {"Name", -15} | {"StreetAddress", -25} | {"PostalCode", -10} | {"City", -15} | {"Country", -20}";
+            string frame = "";
+            for (int i = 0; i < columnLabels.Length; i++)
+            {
+                frame += "-";
+            }
+
+            Console.WriteLine(frame);
+            Console.WriteLine(columnLabels);
+            Console.WriteLine(frame);
+
+            foreach (string s in childStrings)
+            {
+                Console.WriteLine(s);
+            }
+            Console.WriteLine();
+            Console.WriteLine("Press Enter to return to menu.");
+            Console.ReadLine();
+        }
+
         void ExecuteMenuChoice(MenuCommand menuCommand)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.White;
 
-            string[] childQuestions =
-            { "Name: ",
-              "Gender (girl/boy/u): ",
-              "Street address: ",
-              "Postal code: ",
-              "City: ",
-              "And lastly.. Country:" };
-
-            string[] propertyValuesC = new string[childQuestions.Length];
+            string[] propertyValuesC = new string[6]; //The number of insertable Child properties.
             SaintNicholasDbContext context = new SaintNicholasDbContext();
 
             switch (menuCommand)
             {
                 case MenuCommand.AddChild:
 
-                    AddChild(context, childQuestions, propertyValuesC);
+                    AddChild(context, propertyValuesC);
                     break;
 
                 case MenuCommand.EditChild:
@@ -374,15 +440,15 @@ namespace SaintNicholas_ConsoleApp
                     SetStatus(context);
                     break;
 
-                //case MenuCommand.MoreGingerbread:
+                case MenuCommand.MoreGingerbread:
 
-                //    CheckMoreGingerBread(context, done, quasiPropertiesP, newPropertyValuesP);
-                //    break;
+                    CheckGingerBreadDemand(context, true);
+                    break;
 
-                //case MenuCommand.LessGingerbread:
+                case MenuCommand.LessGingerbread:
 
-                //    CheckLessGingerBread(context, done, quasiPropertiesP, newPropertyValuesP);
-                //    break;
+                    CheckGingerBreadDemand(context, false);
+                    break;
             }
             Cancel();
             t = new Thread(Listen);

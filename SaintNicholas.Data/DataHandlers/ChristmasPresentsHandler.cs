@@ -11,6 +11,7 @@ namespace SaintNicholas.Data.DataHandlers
             for (int i = 0; i < quantity; i++)
             {
                 ChristmasPresent newPresent = new ChristmasPresent();
+                newPresent.HandOutYear = DateTime.Now.Year;
 
                 for (int j = 0; j < propertyValues.Length; j++)
                 {
@@ -27,10 +28,6 @@ namespace SaintNicholas.Data.DataHandlers
                         case 2:
                             newPresent.ForNaughtyChild = propertyValues[j].ToLower() == "y";
                             break;
-
-                        case 3:
-                            newPresent.HandOutYear = int.Parse(propertyValues[j]);
-                            break;
                     }
                 }
                 context.ChristmasPresents.Add(newPresent);
@@ -38,54 +35,57 @@ namespace SaintNicholas.Data.DataHandlers
             }
         }
 
-        private static int MatchXyz(SaintNicholasDbContext context, List<ChristmasPresent> anyPresents, List<ChristmasPresent> girlPresents, List<ChristmasPresent> boyPresents, List<int> othersID, List<int> girlsID, List<int> boysID)
+        private static int MatchXyz(SaintNicholasDbContext context, List<ChristmasPresent> neutralPresents, List<ChristmasPresent> girlPresents, List<ChristmasPresent> boyPresents, List<int> othersID, List<int> girlsID, List<int> boysID)
         {
-            int highestCommonDenominator = Math.Min(anyPresents.Count(), othersID.Count());
+            int highestCommonDenominator = Math.Min(neutralPresents.Count, othersID.Count);
             int matches = highestCommonDenominator;
+
+            List<ChristmasPresent> neutralPresentsMatched = new List<ChristmasPresent>();
 
             for (int i = 0; i < highestCommonDenominator; i++)
             {
-                anyPresents[i].Receiver = othersID[i];
-                context.ChristmasPresents.Update(anyPresents[i]);
+                neutralPresents[i].ReceiverId = othersID[i];
+                context.ChristmasPresents.Update(neutralPresents[i]);
 
-                anyPresents.Remove(anyPresents[i]);
+                neutralPresentsMatched.Add(neutralPresents[i]);
             }
 
-            highestCommonDenominator = Math.Min(girlPresents.Count(), girlsID.Count());
+            highestCommonDenominator = Math.Min(girlPresents.Count, girlsID.Count);
             matches += highestCommonDenominator;
+
+            List<int> servedGirlsNBoys = new List<int>();
 
             for (int j = 0; j < highestCommonDenominator; j++)
             {
-                girlPresents[j].Receiver = girlsID[j];
-                context.ChristmasPresents.Update(anyPresents[j]);
+                girlPresents[j].ReceiverId = girlsID[j];
+                context.ChristmasPresents.Update(girlPresents[j]);
 
-                girlPresents.Remove(girlPresents[j]);
-                girlsID.Remove(girlsID[j]);
+                servedGirlsNBoys.Add(girlsID[j]);
             }
 
-            highestCommonDenominator = Math.Min(boyPresents.Count(), boysID.Count());
+            highestCommonDenominator = Math.Min(boyPresents.Count, boysID.Count);
             matches += highestCommonDenominator;
 
             for (int k = 0; k < highestCommonDenominator; k++)
             {
-                boyPresents[k].Receiver = boysID[k];
-                context.ChristmasPresents.Update(anyPresents[k]);
+                boyPresents[k].ReceiverId = boysID[k];
+                context.ChristmasPresents.Update(boyPresents[k]);
 
-                boyPresents.Remove(boyPresents[k]);
-                boysID.Remove(boysID[k]);
+                servedGirlsNBoys.Add(boysID[k]);
             }
 
-            if ((girlsID.Count > 0 || boysID.Count > 0) && anyPresents.Count > 0)
-            {
-                List<int> restID = girlsID.Concat(boysID).ToList();
+            List<int> restID = girlsID.Concat(boysID).Except(servedGirlsNBoys).ToList();
+            List<ChristmasPresent> neutralPresentsRest = neutralPresents.Except(neutralPresentsMatched).ToList();
 
-                highestCommonDenominator = Math.Min(anyPresents.Count(), restID.Count());
+            if (restID.Count > 0 && neutralPresentsRest.Count > 0)
+            {
+                highestCommonDenominator = Math.Min(neutralPresentsRest.Count, restID.Count);
                 matches += highestCommonDenominator;
 
                 for (int l = 0; l < highestCommonDenominator; l++)
                 {
-                    anyPresents[l].Receiver = restID[l];
-                    context.ChristmasPresents.Update(anyPresents[l]);
+                    neutralPresentsRest[l].ReceiverId = restID[l];
+                    context.ChristmasPresents.Update(neutralPresentsRest[l]);
                 }
             }
             return matches;
@@ -95,7 +95,7 @@ namespace SaintNicholas.Data.DataHandlers
         {
             int year = DateTime.Now.Year;
 
-            var alreadyGotPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year).Select(p => p.Receiver);
+            var alreadyGotPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year).Select(p => p.ReceiverId);
 
             var girlsToServeID = context.Children
                 .Where(c => !alreadyGotPresents.Contains(c.Id) && c.Gender.ToLower() == "girl")
@@ -112,8 +112,8 @@ namespace SaintNicholas.Data.DataHandlers
                 .Select(c => c.Id)
                 .ToList();
 
-            var naughtyChildrenID = context.BehavioralRecords.Where(r => r.Naughty).Select(r => r.ChildID);
-            var goodChildrenID = context.BehavioralRecords.Where(r => !r.Naughty).Select(r => r.ChildID);
+            var naughtyChildrenID = context.BehavioralRecords.Where(r => r.Naughty && r.Year == year).Select(r => r.ChildID);
+            var goodChildrenID = context.BehavioralRecords.Where(r => !r.Naughty && r.Year == year).Select(r => r.ChildID);
 
             var naughtyGirlsID = naughtyChildrenID.Where(i => girlsToServeID.Contains(i)).ToList();
             var naughtyBoysID = naughtyChildrenID.Where(i => boysToServeID.Contains(i)).ToList();
@@ -123,16 +123,16 @@ namespace SaintNicholas.Data.DataHandlers
             var goodBoysID = goodChildrenID.Where(i => boysToServeID.Contains(i)).ToList();
             var goodOthersID = goodChildrenID.Where(i => othersToServeID.Contains(i)).ToList();
 
-            var goodGirlPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && !p.ForNaughtyChild && p.ForGender.ToLower() == "girl" && !p.Receiver.HasValue).ToList();
-            var goodBoyPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && !p.ForNaughtyChild && p.ForGender.ToLower() == "boy" && !p.Receiver.HasValue).ToList();
-            var goodAnyPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && !p.ForNaughtyChild && p.ForGender.ToLower() == "u" && !p.Receiver.HasValue).ToList();
+            var goodGirlPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && !p.ForNaughtyChild && p.ForGender.ToLower() == "girl" && !p.ReceiverId.HasValue).ToList();
+            var goodBoyPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && !p.ForNaughtyChild && p.ForGender.ToLower() == "boy" && !p.ReceiverId.HasValue).ToList();
+            var goodNeutralPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && !p.ForNaughtyChild && p.ForGender.ToLower() == "u" && !p.ReceiverId.HasValue).ToList();
 
-            var naughtyGirlPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && p.ForNaughtyChild && p.ForGender.ToLower() == "girl" && !p.Receiver.HasValue).ToList();
-            var naughtyBoyPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && p.ForNaughtyChild && p.ForGender.ToLower() == "boy" && !p.Receiver.HasValue).ToList();
-            var naughtyAnyPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && p.ForNaughtyChild && p.ForGender.ToLower() == "u" && !p.Receiver.HasValue).ToList();
+            var naughtyGirlPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && p.ForNaughtyChild && p.ForGender.ToLower() == "girl" && !p.ReceiverId.HasValue).ToList();
+            var naughtyBoyPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && p.ForNaughtyChild && p.ForGender.ToLower() == "boy" && !p.ReceiverId.HasValue).ToList();
+            var naughtyNeutralPresents = context.ChristmasPresents.Where(p => p.HandOutYear == year && p.ForNaughtyChild && p.ForGender.ToLower() == "u" && !p.ReceiverId.HasValue).ToList();
 
-            int matches = MatchXyz(context, naughtyAnyPresents, naughtyGirlPresents, naughtyBoyPresents, naughtyOthersID, naughtyGirlsID, naughtyBoysID);
-            matches += MatchXyz(context, goodAnyPresents, goodGirlPresents, goodBoyPresents, goodOthersID, goodGirlsID, goodBoysID);
+            int matches = MatchXyz(context, naughtyNeutralPresents, naughtyGirlPresents, naughtyBoyPresents, naughtyOthersID, naughtyGirlsID, naughtyBoysID);
+            matches += MatchXyz(context, goodNeutralPresents, goodGirlPresents, goodBoyPresents, goodOthersID, goodGirlsID, goodBoysID);
 
             context.SaveChanges();
             return matches;

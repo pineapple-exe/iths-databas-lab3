@@ -5,7 +5,7 @@ namespace SaintNicholas.Data.DataHandlers
 {
     public static class ChildrenHandler
     {
-        public static Action<Child, string>[] PropertySetters()//Dependent upon the constraints of Children columns.
+        public static Action<Child, string>[] PropertySetters()
         {
             return new Action<Child, string>[]
             {
@@ -33,6 +33,14 @@ namespace SaintNicholas.Data.DataHandlers
 
         public static void RemoveData(SaintNicholasDbContext context, int id)
         {
+            if (context.BehavioralRecords.Select(b => b.ChildID).Contains(id))
+            {
+                context.BehavioralRecords.RemoveRange(context.BehavioralRecords.Where(b => b.Child.Id == id));
+            }
+            if (context.ChristmasPresents.Select(p => p.Receiver.Id).Contains(id))
+            {
+                context.ChristmasPresents.RemoveRange(context.ChristmasPresents.Where(p => p.Receiver.Id == id));
+            }
             context.Children.Remove(context.Children.Where(x => x.Id == id).First());
             context.SaveChanges();
         }
