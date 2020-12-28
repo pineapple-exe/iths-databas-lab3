@@ -8,7 +8,7 @@ Gender kan sättas till "girl", "boy" men även "u" som kan användas för att r
 
 Under menyval "Christmas presents" kan Tomten
 1. lägga till en eller flera julklappar av en typ (och därmed fylla i samtliga data för denna batch),
-2. kolla hur många barn som innevarande år inte har matchats med en julklapp (och om de saknade klapparna är roliga / tråkiga / obestämt, samt könsneutrala / för flickor / för pojkar),
+2. kolla hur många barn som innevarande år inte har matchats med en julklapp, samt om de saknade klapparna är roliga / tråkiga / obestämt, samt könsneutrala / för flickor / för pojkar,
 3. använda match-algoritmen som parar ihop existerande julklappar med barn vars beteenden har registrerats i Behavioral records. Detta görs för innevarande år, med kön och beteende i åtanke.
 
 Under menyval "Children's behavior" kan Tomten
