@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaintNicholas_ConsoleApp", "SaintNicholas_ConsoleApp\SaintNicholas_ConsoleApp.csproj", "{F4D7B7C0-27AC-4FF7-9AFA-9EF55AAB4CB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaintNicholas.ConsoleApp", "SaintNicholas_ConsoleApp\SaintNicholas.ConsoleApp.csproj", "{F4D7B7C0-27AC-4FF7-9AFA-9EF55AAB4CB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaintNicholas.Data", "SaintNicholas.Data\SaintNicholas.Data.csproj", "{4F03E8A4-6356-4958-B8AD-4FA80C558FF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SaintNicholas.Data", "SaintNicholas.Data\SaintNicholas.Data.csproj", "{4F03E8A4-6356-4958-B8AD-4FA80C558FF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

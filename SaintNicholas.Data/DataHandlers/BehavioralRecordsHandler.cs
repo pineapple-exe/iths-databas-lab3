@@ -68,5 +68,10 @@ namespace SaintNicholas.Data.DataHandlers
             var theChildren = context.Children.Where(c => needsIt.Contains(c.Id)).ToList();
             return theChildren;
         }
+
+        public static List<BehavioralRecord> RecordsTable(SaintNicholasDbContext context)
+        {
+            return context.BehavioralRecords.ToList();
+        }
     }
 }

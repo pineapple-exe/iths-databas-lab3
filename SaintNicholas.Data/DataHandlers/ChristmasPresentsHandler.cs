@@ -137,5 +137,10 @@ namespace SaintNicholas.Data.DataHandlers
             context.SaveChanges();
             return matches;
         }
+
+        public static List<ChristmasPresent> PresentsTable(SaintNicholasDbContext context)
+        {
+            return context.ChristmasPresents.ToList();
+        }
     }
 }

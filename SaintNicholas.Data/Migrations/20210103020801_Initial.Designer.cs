@@ -10,8 +10,8 @@ using SaintNicholas.Data;
 namespace SaintNicholas.Data.Migrations
 {
     [DbContext(typeof(SaintNicholasDbContext))]
-    [Migration("20201219161649_x")]
-    partial class x
+    [Migration("20210103020801_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -98,10 +98,12 @@ namespace SaintNicholas.Data.Migrations
                     b.Property<int>("HandOutYear")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Receiver")
+                    b.Property<int?>("ReceiverId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
 
                     b.ToTable("ChristmasPresents");
                 });
@@ -115,6 +117,15 @@ namespace SaintNicholas.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Child");
+                });
+
+            modelBuilder.Entity("SaintNicholas.Data.ChristmasPresent", b =>
+                {
+                    b.HasOne("SaintNicholas.Data.Child", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId");
+
+                    b.Navigation("Receiver");
                 });
 #pragma warning restore 612, 618
         }

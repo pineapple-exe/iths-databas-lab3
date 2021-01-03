@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SaintNicholas.Data.DataHandlers
@@ -18,7 +19,7 @@ namespace SaintNicholas.Data.DataHandlers
             };
         }
 
-        public static void AddData(SaintNicholasDbContext context, string[] values)
+        public static Child AddData(SaintNicholasDbContext context, string[] values)
         {
             Child newChild = new Child();
             var propertySetters = PropertySetters();
@@ -29,6 +30,7 @@ namespace SaintNicholas.Data.DataHandlers
             }
             context.Children.Add(newChild);
             context.SaveChanges();
+            return newChild;
         }
 
         public static void RemoveData(SaintNicholasDbContext context, int id)
@@ -49,6 +51,11 @@ namespace SaintNicholas.Data.DataHandlers
         {
             context.Children.Update(child);
             context.SaveChanges();
+        }
+
+        public static List<Child> ChildrenTable(SaintNicholasDbContext context)
+        {
+            return context.Children.ToList();
         }
     }
 }

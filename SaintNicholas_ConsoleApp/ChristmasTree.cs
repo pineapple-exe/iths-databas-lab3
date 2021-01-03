@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace SaintNicholas_ConsoleApp
+namespace SaintNicholas.ConsoleApp
 {
     static class ChristmasTree
     {
@@ -92,6 +92,7 @@ namespace SaintNicholas_ConsoleApp
 
 			while (true)
 			{
+				Console.CursorVisible = false;
 				Console.SetCursorPosition(0, 0);
 				dressed.Clear();
 
