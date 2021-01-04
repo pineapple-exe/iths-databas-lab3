@@ -82,7 +82,6 @@ namespace SaintNicholas.ConsoleApp
         void ExecuteMenuChoice(MenuCommand menuCommand)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
 
             string[] propertyValuesC = new string[6];
             int[] columnWidthsC = new int[] { 5, 20, 6, 25, 10, 15, 20 };
@@ -169,6 +168,7 @@ namespace SaintNicholas.ConsoleApp
 
         public void ActivateMenu()
         {
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
 
             for (int i = 0; i < currentMenu.Length; i++)

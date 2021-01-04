@@ -10,8 +10,8 @@ using SaintNicholas.Data;
 namespace SaintNicholas.Data.Migrations
 {
     [DbContext(typeof(SaintNicholasDbContext))]
-    [Migration("20210103020801_Initial")]
-    partial class Initial
+    [Migration("20210104164708_Everything")]
+    partial class Everything
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -55,7 +55,9 @@ namespace SaintNicholas.Data.Migrations
                         .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -90,7 +92,9 @@ namespace SaintNicholas.Data.Migrations
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("ForGender")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<bool>("ForNaughtyChild")
                         .HasColumnType("bit");

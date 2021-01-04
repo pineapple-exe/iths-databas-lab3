@@ -2,7 +2,7 @@
 
 namespace SaintNicholas.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Everything : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace SaintNicholas.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
                     StreetAddress = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
                     City = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
@@ -50,7 +50,7 @@ namespace SaintNicholas.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Contents = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    ForGender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ForGender = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
                     ForNaughtyChild = table.Column<bool>(type: "bit", nullable: false),
                     ReceiverId = table.Column<int>(type: "int", nullable: true),
                     HandOutYear = table.Column<int>(type: "int", nullable: false)

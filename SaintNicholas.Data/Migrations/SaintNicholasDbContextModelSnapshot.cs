@@ -53,7 +53,9 @@ namespace SaintNicholas.Data.Migrations
                         .HasColumnType("nvarchar(32)");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -88,7 +90,9 @@ namespace SaintNicholas.Data.Migrations
                         .HasColumnType("nvarchar(64)");
 
                     b.Property<string>("ForGender")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<bool>("ForNaughtyChild")
                         .HasColumnType("bit");
