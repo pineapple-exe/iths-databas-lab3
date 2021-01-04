@@ -1,9 +1,9 @@
-#Bakgrund
+# Bakgrund
 
 Tomtens ideella verksamhet har rötter som sträcker sig långt bak i tiden, djupt in i människans sägner. Under medeltiden såg man Sankt Nikolaus med en djävulsliknande statur hack i häl. Det diaboliska är inget främmande för eller farligt enligt Tomten, därför har han förmågan att hålla det onda i schack. I praktiken innebär det att verksamheten inte nöjer sig med det meritokratiska systemet, där det goda belönas och det onda bestraffas. Att värna om alla barn innebär att sträva efter balans och kunna utöva nåd. Och så utvecklades pepparkaksreceptet, för att skänka godhet till de som berövats det. Pepparkakor gör oss snälla, sägs det, men ingen vet hur. Processerna för moralisk fingertoppskänsla samt produktion och utdelning av julklappar har fått en mystisk aura genom sin effektivitet. Med digitalisering kan verksamheten fortsätta utvecklas med den växande samvaron.
 
 
-#Processbeskrivning
+# Processbeskrivning
 
 Tomtenissarna knappar in barndata för de barn som tillhör åldersgruppen som verksameten har kommit överens om att tjäna.
 
@@ -13,17 +13,17 @@ Beteende för respektive barn innevarande år knappas i regel in så snart som m
 
 Julklappar och barn paras ihop via "Match presents with children"-funktionen, allteftersom beteende matas in och lagret fylls på med klappar. Detta hålls tight för att styra julklappsproduktionen. Julklapparna slås därefter in, markerade med namn och address.
 
-Pepparkaksdistribuering sker baserat på de tre föregångna åren, under juletid innevarande år, inför nästkommande år (på så vis kan man se om ett barns beteende har korrigerats före eller efter intervention, vilket fortsättningsvis kan användas i samband med förfiningen av pepparkaksreceptet).
+Pepparkaksdistribuering sker baserat på de tre föregångna åren, under juletid innevarande år, inför nästkommande år (på så vis kan man se om ett barns beteende har korrigerats före eller efter intervention, vilket kan användas i samband med förfining av pepparkaksreceptet).
 
 *Och massa magi däremellan!*
 
 
-#Användning
+# Användning
 
-Om du vill skapa en egen databas så kan du konfigurera den i connection string i SaintNicholasDbContext.cs
+Om du vill skapa en egen databas så kan du konfigurera den i connection string i SaintNicholasDbContext.cs.
 Sen är det bara att köra Update-Database i Package Manager Console.
 
-Vid uppstart kommer du att få välja att lägga in testdata (du vill det).
+Vid uppstart kommer du få välja att lägga in testdata (du vill det).
 
 Under menyval "Children" kan Tomten
 1. lägga till ett barn i databasen (och därmed fylla i samtliga data för detta barn), 
@@ -45,3 +45,5 @@ Under menyval "Children's behavior" kan Tomten
 4. visa all beteendedata.
 
 I menyläget navigerar man sig med piltangenterna, Enter och Backspace.
+
+Tänk på att du kan behöva förstora fönstret för att tabellerna ska kunna presenteras ordentligt.

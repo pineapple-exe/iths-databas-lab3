@@ -9,6 +9,8 @@ namespace SaintNicholas.Data
         {
             builder.Property(e => e.Name).IsRequired().HasMaxLength(64);
 
+            builder.Property(e => e.Gender).IsRequired().HasMaxLength(4);
+
             builder.Property(e => e.StreetAddress).IsRequired().HasMaxLength(64);
 
             builder.Property(e => e.PostalCode).IsRequired().HasMaxLength(16);

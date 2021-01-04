@@ -92,6 +92,7 @@ namespace SaintNicholas.ConsoleApp
 
 			while (true)
 			{
+				ConsoleColor standard = Console.ForegroundColor;
 				Console.CursorVisible = false;
 				Console.SetCursorPosition(0, 0);
 				dressed.Clear();
@@ -131,6 +132,7 @@ namespace SaintNicholas.ConsoleApp
 					}
 				}
 				Thread.Sleep(500);
+				Console.ForegroundColor = standard;
 				activateMenu();
 			}
 		}
