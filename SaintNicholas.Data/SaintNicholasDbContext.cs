@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SaintNicholas.Data.Entities;
 
 namespace SaintNicholas.Data
 {

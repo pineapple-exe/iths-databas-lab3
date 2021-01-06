@@ -1,4 +1,4 @@
-﻿namespace SaintNicholas.Data
+﻿namespace SaintNicholas.Data.Entities
 {
     public class BehavioralRecord
     {

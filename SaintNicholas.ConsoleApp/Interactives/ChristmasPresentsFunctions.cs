@@ -3,11 +3,10 @@ using SaintNicholas.Data;
 using SaintNicholas.Data.DataHandlers;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SaintNicholas.ConsoleApp.Interactives
 {
-    class ChristmasPresentsFunctions : Validators
+    class ChristmasPresentsFunctions
     {
         public static void AddPresent(SaintNicholasDbContext context)
         {
@@ -16,19 +15,19 @@ namespace SaintNicholas.ConsoleApp.Interactives
             string[] propertyValues = new string[3];
             string initialQ = "Quantity: ";
 
-            if (!RepeatableReadline(initialQ, IntegerValidator, out string quantity) || quantity == "0")
+            if (!Validators.RepeatableReadline(initialQ, Validators.IntegerValidator, out string quantity) || quantity == "0")
             {
                 return;
             }
-            if (!RepeatableReadline("Contents: ", s => null, out propertyValues[0]))
+            if (!Validators.RepeatableReadline("Contents: ", s => null, out propertyValues[0]))
             {
                 return;
             }
-            if (!RepeatableReadline("For gender (girl/boy/u): ", GenderValidator, out propertyValues[1]))
+            if (!Validators.RepeatableReadline("For gender (girl/boy/u): ", Validators.GenderValidator, out propertyValues[1]))
             {
                 return;
             }
-            if (!RepeatableReadline("And lastly... For naughty children (y/n): ", BoolValidator, out propertyValues[2]))
+            if (!Validators.RepeatableReadline("And lastly... For naughty children (y/n): ", Validators.BoolValidator, out propertyValues[2]))
             {
                 return;
             }

@@ -6,7 +6,7 @@ namespace SaintNicholas.ConsoleApp.Interactives
 {
     class Validators
     {
-        protected static string GenderValidator(string input)
+        internal static string GenderValidator(string input)
         {
             string[] genderAlternatives = new string[] { "girl", "boy", "u" };
 
@@ -17,7 +17,7 @@ namespace SaintNicholas.ConsoleApp.Interactives
             return null;
         }
 
-        protected static string BoolValidator(string input)
+        internal static string BoolValidator(string input)
         {
             string[] boolAlternatives = new string[] { "y", "n" };
 
@@ -28,7 +28,7 @@ namespace SaintNicholas.ConsoleApp.Interactives
             return null;
         }
 
-        protected static string IntegerValidator(string input)
+        internal static string IntegerValidator(string input)
         {
             if (!int.TryParse(input, out int ignoreMe))
             {
@@ -37,7 +37,7 @@ namespace SaintNicholas.ConsoleApp.Interactives
             return null;
         }
 
-        protected static string ChildValidator(string input)
+        internal static string ChildValidator(string input)
         {
             SaintNicholasDbContext context = new SaintNicholasDbContext();
 
@@ -53,7 +53,7 @@ namespace SaintNicholas.ConsoleApp.Interactives
             return null;
         }
 
-        protected static bool RepeatableReadline(string question, Func<string, string> validator, out string result)
+        internal static bool RepeatableReadline(string question, Func<string, string> validator, out string result)
         {
             while (true)
             {

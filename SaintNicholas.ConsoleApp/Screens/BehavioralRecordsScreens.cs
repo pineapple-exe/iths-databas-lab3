@@ -1,11 +1,12 @@
 ﻿using SaintNicholas.Data;
+using SaintNicholas.Data.Entities;
 using SaintNicholas.Data.DataHandlers;
 using System;
 using System.Collections.Generic;
 
 namespace SaintNicholas.ConsoleApp.Screens
 {
-    class BehavioralRecordsScreens : Utils
+    class BehavioralRecordsScreens
     {
         public static void GingerBreadScreen(SaintNicholasDbContext context, bool naughty, int[] columnWidths, List<string> header)
         {
@@ -14,7 +15,7 @@ namespace SaintNicholas.ConsoleApp.Screens
                                            "their exposure to gingerbread is restricted";
 
             List<Child> whoNeedsIt = BehavioralRecordsHandler.GeneralGingerBread(context, naughty);
-            List<string> childStrings = ChildStrings(whoNeedsIt, columnWidths);
+            List<string> childStrings = Utils.ChildStrings(whoNeedsIt, columnWidths);
 
             if (childStrings == null)
             {
@@ -28,7 +29,7 @@ namespace SaintNicholas.ConsoleApp.Screens
             Console.WriteLine($"It is therefore suggested that {suggestion}.");
             Console.WriteLine();
 
-            PrintTable(columnWidths, header, childStrings);
+            Utils.PrintTable(columnWidths, header, childStrings);
         }
 
         private static List<string> RecordStrings(List<BehavioralRecord> theRecords, int[] columnWidths)
@@ -39,11 +40,11 @@ namespace SaintNicholas.ConsoleApp.Screens
             {
                 var recordValues = new List<string>
                 {
-                    Ellipsis(r.ChildID.ToString(), columnWidths[0]),
-                    Ellipsis(r.Year.ToString(), columnWidths[1]),
-                    Ellipsis(r.Naughty.ToString(), columnWidths[2]),
+                    Utils.Ellipsis(r.ChildID.ToString(), columnWidths[0]),
+                    Utils.Ellipsis(r.Year.ToString(), columnWidths[1]),
+                    Utils.Ellipsis(r.Naughty.ToString(), columnWidths[2]),
                 };
-                theStrings.Add(BuildRow(recordValues, columnWidths));
+                theStrings.Add(Utils.BuildRow(recordValues, columnWidths));
             }
             return theStrings;
         }
@@ -52,7 +53,7 @@ namespace SaintNicholas.ConsoleApp.Screens
         {
             List<string> rows = RecordStrings(BehavioralRecordsHandler.RecordsTable(context), columnWidths);
 
-            PrintTable(columnWidths, header, rows);
+            Utils.PrintTable(columnWidths, header, rows);
         }
     }
 }

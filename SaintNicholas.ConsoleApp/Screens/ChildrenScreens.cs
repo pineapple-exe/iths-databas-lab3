@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace SaintNicholas.ConsoleApp.Screens
 {
-    class ChildrenScreens : Utils
+    class ChildrenScreens
     {
         public static void ProvideChildrensTable(SaintNicholasDbContext context, int[] columnWidths, List<string> header)
         {
-            List<string> rows = ChildStrings(ChildrenHandler.ChildrenTable(context), columnWidths);
+            List<string> rows = Utils.ChildStrings(ChildrenHandler.ChildrenTable(context), columnWidths);
 
-            PrintTable(columnWidths, header, rows);
+            Utils.PrintTable(columnWidths, header, rows);
         }
     }
 }

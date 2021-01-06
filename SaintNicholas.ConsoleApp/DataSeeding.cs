@@ -1,4 +1,5 @@
 ﻿using SaintNicholas.Data;
+using SaintNicholas.Data.Entities;
 
 namespace SaintNicholas.ConsoleApp
 {

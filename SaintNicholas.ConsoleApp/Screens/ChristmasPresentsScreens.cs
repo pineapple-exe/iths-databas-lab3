@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using SaintNicholas.Data;
 using SaintNicholas.Data.DataHandlers;
+using SaintNicholas.Data.Entities;
 
 namespace SaintNicholas.ConsoleApp.Screens
 {
-    class ChristmasPresentsScreens : Utils
+    class ChristmasPresentsScreens
     {
         private static void DemandsDetails(int[] behavioralDemands, Dictionary<Gender, int>[] genderedDemands, params string[] typeNotes)
         {
@@ -46,14 +47,14 @@ namespace SaintNicholas.ConsoleApp.Screens
             {
                 var christmasPresentValues = new List<string>
                 {
-                    Ellipsis(p.Id.ToString(), columnWidths[0]),
-                    Ellipsis(p.Contents.ToString(), columnWidths[1]),
-                    Ellipsis(p.ForGender.ToString(), columnWidths[2]),
-                    Ellipsis(p.ForNaughtyChild.ToString(), columnWidths[3]),
-                    Ellipsis(p.ReceiverId.ToString(), columnWidths[4]),
-                    Ellipsis(p.HandOutYear.ToString(), columnWidths[5])
+                    Utils.Ellipsis(p.Id.ToString(), columnWidths[0]),
+                    Utils.Ellipsis(p.Contents.ToString(), columnWidths[1]),
+                    Utils.Ellipsis(p.ForGender.ToString(), columnWidths[2]),
+                    Utils.Ellipsis(p.ForNaughtyChild.ToString(), columnWidths[3]),
+                    Utils.Ellipsis(p.ReceiverId.ToString(), columnWidths[4]),
+                    Utils.Ellipsis(p.HandOutYear.ToString(), columnWidths[5])
                 };
-                theStrings.Add(BuildRow(christmasPresentValues, columnWidths));
+                theStrings.Add(Utils.BuildRow(christmasPresentValues, columnWidths));
             }
             return theStrings;
         }
@@ -62,7 +63,7 @@ namespace SaintNicholas.ConsoleApp.Screens
         {
             List<string> rows = ChristmasPresentStrings(ChristmasPresentsHandler.PresentsTable(context), columnWidths);
 
-            PrintTable(columnWidths, header, rows);
+            Utils.PrintTable(columnWidths, header, rows);
         }
     }
 }

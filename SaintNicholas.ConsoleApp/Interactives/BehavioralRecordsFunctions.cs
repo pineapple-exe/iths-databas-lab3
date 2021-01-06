@@ -6,16 +6,16 @@ using System.Collections.Generic;
 
 namespace SaintNicholas.ConsoleApp.Interactives
 {
-    class BehavioralRecordsFunctions : Validators
+    class BehavioralRecordsFunctions
     {
         public static void SetBehavior(SaintNicholasDbContext context)
         {
             Console.WriteLine("Enter empty string to cancel.");
-            if (!RepeatableReadline("Specify Id of child.", ChildValidator, out string id))
+            if (!Validators.RepeatableReadline("Specify Id of child.", Validators.ChildValidator, out string id))
             {
                 return;
             }
-            if (!RepeatableReadline("Has been naughty this year (y/n): ", BoolValidator, out string propertyValue))
+            if (!Validators.RepeatableReadline("Has been naughty this year (y/n): ", Validators.BoolValidator, out string propertyValue))
             {
                 return;
             }

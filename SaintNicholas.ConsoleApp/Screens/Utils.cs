@@ -1,4 +1,4 @@
-﻿using SaintNicholas.Data;
+﻿using SaintNicholas.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +7,7 @@ namespace SaintNicholas.ConsoleApp.Screens
 {
     class Utils
     {
-        protected static string Ellipsis(string propertyValue, int maxLength)
+        internal static string Ellipsis(string propertyValue, int maxLength)
         {
             if (propertyValue.Length > maxLength)
             {
@@ -16,7 +16,7 @@ namespace SaintNicholas.ConsoleApp.Screens
             return propertyValue;
         }
 
-        protected static string BuildRow(List<string> objectValues, int[] columnWidths)
+        internal static string BuildRow(List<string> objectValues, int[] columnWidths)
         {
             StringBuilder sBuilder = new StringBuilder();
 
@@ -27,7 +27,7 @@ namespace SaintNicholas.ConsoleApp.Screens
             return sBuilder.ToString();
         }
 
-        protected static List<string> ChildStrings(List<Child> theChildren, int[] columnWidths)
+        internal static List<string> ChildStrings(List<Child> theChildren, int[] columnWidths)
         {
             var theStrings = new List<string>();
 
@@ -48,7 +48,7 @@ namespace SaintNicholas.ConsoleApp.Screens
             return theStrings;
         }
 
-        protected static void PrintTable(int[] columnWidths, List<string> header, List<string> rows)
+        internal static void PrintTable(int[] columnWidths, List<string> header, List<string> rows)
         {
             string columnLabels = BuildRow(header, columnWidths);
             string frame = "";

@@ -30,13 +30,14 @@ Under menyval "Children" kan man
 2. ändra redan existerande data selektivt för ett barn baserat på dess Id, 
 3. baserat på Id ta bort ett barn från databasen,
 4. visa all barndata.
+
 Gender kan sättas till "girl", "boy" men även "u" som kan användas för att representera allmänt ospecificerat eller aktivt särskilt fall.
 
 Under menyval "Christmas presents" kan man
 1. lägga till en eller flera julklappar av en typ (och därmed fylla i samtliga data för denna batch),
 2. kolla hur många barn som innevarande år inte har matchats med en julklapp, samt om de saknade klapparna är roliga / tråkiga / obestämt, samt könsneutrala / för flickor / för pojkar,
-3. använda match-algoritmen som parar ihop existerande julklappar med barn vars beteenden har registrerats i Behavioral records. Detta görs för innevarande år, med kön och beteende i åtanke,
-4. visa all julklappsdata.
+3. använda match-algoritmen som parar ihop existerande julklappar med barn vars beteenden har registrerats i Behavioral records. Detta görs för innevarande år, med kön och beteende i åtanke.
+4. Visa all julklappsdata.
 
 Under menyval "Children's behavior" kan man
 1. sätta status (naughty, y/n) på ett barn (baserat på barnets Id, innevarande år),
