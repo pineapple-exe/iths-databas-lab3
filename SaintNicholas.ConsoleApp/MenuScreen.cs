@@ -6,12 +6,12 @@ namespace SaintNicholas.ConsoleApp
 {
     class MenuScreen
     {
-        public string[] Menu { get; }
+        public MenuAlternative[] Menu { get; }
         public int PendingMenuChoice { get; set; }
         public static readonly string space = "              ";
         public static readonly string spaceCursor = "            * ";
 
-        public MenuScreen(string[] alternatives)
+        public MenuScreen(MenuAlternative[] alternatives)
         {
             Menu = alternatives;
             PendingMenuChoice = 0;
@@ -26,18 +26,13 @@ namespace SaintNicholas.ConsoleApp
             {
                 if (PendingMenuChoice == i)
                 {
-                    Console.WriteLine(spaceCursor + Menu[i]);
+                    Console.WriteLine(spaceCursor + Menu[i].Label);
                 }
                 else
                 {
-                    Console.WriteLine(space + Menu[i]);
+                    Console.WriteLine(space + Menu[i].Label);
                 }
             }
-
-            //if (chosenCommand != MenuCommand.None)
-            //{
-            //    ExecuteMenuChoice(chosenCommand);
-            //}
         }
     }
 }

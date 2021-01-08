@@ -23,14 +23,15 @@ namespace SaintNicholas.ConsoleApp
         SetBehavior,
         MoreGingerbread,
         LessGingerbread,
-        ViewRecords
+        ViewRecords,
+
+        ClearConsole
     }
     class Menu
     {
         private static readonly string firstAlt = "Children    ";
         private static readonly string secondAlt = "Christmas presents        ";
         private static readonly string thirdAlt = "Children's behavior         ";
-        private static readonly string invisibilityCloak = "               ";
 
         private static readonly string firstFirst = "Add child   ";
         private static readonly string firstSecond = "Edit child                ";
@@ -47,12 +48,40 @@ namespace SaintNicholas.ConsoleApp
         private static readonly string thirdThird = "Who needs less gingerbread";
         private static readonly string thirdFourth = "View records                ";
 
-        private static readonly string[] mainMenu = new string[] { firstAlt, secondAlt, thirdAlt, invisibilityCloak };
-        private static readonly string[] firstAltMenu = new string[] { firstFirst, firstSecond, firstThird, firstFourth };
-        private static readonly string[] secondAltMenu = new string[] { secondFirst, secondSecond, secondThird, secondFourth };
-        private static readonly string[] thirdAltMenu = new string[] { thirdFirst, thirdSecond, thirdThird, thirdFourth };
+        private static readonly MenuAlternative[] mainMenu = new MenuAlternative[]
+        {
+            new MenuAlternative(firstAlt, MenuCommand.None),
+            new MenuAlternative(secondAlt, MenuCommand.None),
+            new MenuAlternative(thirdAlt, MenuCommand.None)
+        };
+        private static readonly MenuAlternative[] firstAltMenu = new MenuAlternative[]
+        {
+            new MenuAlternative(firstFirst, MenuCommand.AddChild),
+            new MenuAlternative(firstSecond, MenuCommand.EditChild),
+            new MenuAlternative(firstThird, MenuCommand.RemoveChild),
+            new MenuAlternative(firstFourth, MenuCommand.ViewChildren)
+        };
+        private static readonly MenuAlternative[] secondAltMenu = new MenuAlternative[]
+        {
+            new MenuAlternative(secondFirst, MenuCommand.AddPresent),
+            new MenuAlternative(secondSecond, MenuCommand.CheckDemands),
+            new MenuAlternative(secondThird, MenuCommand.MatchPresents),
+            new MenuAlternative(secondFourth, MenuCommand.ViewPresents)
+        };
+        private static readonly MenuAlternative[] thirdAltMenu = new MenuAlternative[]
+        {
+            new MenuAlternative(thirdFirst, MenuCommand.SetBehavior),
+            new MenuAlternative(thirdSecond, MenuCommand.AddPresent),
+            new MenuAlternative(thirdThird, MenuCommand.AddPresent),
+            new MenuAlternative(thirdFourth, MenuCommand.AddPresent)
+        };
 
-        private static readonly string[][] subMenuParty = new string[][] { firstAltMenu, secondAltMenu, thirdAltMenu };
+        private static readonly MenuAlternative[][] subMenuParty = new MenuAlternative[][]
+        {
+            firstAltMenu,
+            secondAltMenu, 
+            thirdAltMenu
+        };
 
         private Stack<MenuScreen> menuStack = new Stack<MenuScreen>();
 
@@ -66,7 +95,7 @@ namespace SaintNicholas.ConsoleApp
             t.Start();
         }
 
-        private void FillMenu(string[] alternatives)
+        private void FillMenu(MenuAlternative[] alternatives)
         {
             menuStack.Push(new MenuScreen(alternatives));
         }
@@ -158,6 +187,12 @@ namespace SaintNicholas.ConsoleApp
 
                     BehavioralRecordsFunctions.ViewRecords(context, columnWidthsR, headerR);
                     break;
+
+
+                case MenuCommand.ClearConsole:
+
+                    Console.Clear();
+                    break;
             }
             Cancel();
             t = new Thread(Listen);
@@ -180,15 +215,7 @@ namespace SaintNicholas.ConsoleApp
             {
                 ConsoleKeyInfo keyPress = Console.ReadKey();
 
-                if (menuStack.Peek().Menu == mainMenu && keyPress.Key == ConsoleKey.DownArrow)
-                {
-                    if (menuStack.Peek().PendingMenuChoice != Array.IndexOf(mainMenu, invisibilityCloak) - 1)
-                    {
-                        menuStack.Peek().PendingMenuChoice++;
-                    }
-                }
-
-                else if (keyPress.Key == ConsoleKey.DownArrow && menuStack.Peek().PendingMenuChoice < menuStack.Peek().Menu.Length - 1)
+                if (keyPress.Key == ConsoleKey.DownArrow && menuStack.Peek().PendingMenuChoice < menuStack.Peek().Menu.Length - 1)
                 {
                     menuStack.Peek().PendingMenuChoice++;
                 }
@@ -206,72 +233,14 @@ namespace SaintNicholas.ConsoleApp
                     }
                     else
                     {
-                        MenuCommand menuCommand = 0;
-
-                        if (menuStack.Peek().Menu == firstAltMenu)
-                        {
-                            switch (menuStack.Peek().PendingMenuChoice)
-                            {
-                                case 0:
-                                    menuCommand = MenuCommand.AddChild;
-                                    break;
-                                case 1:
-                                    menuCommand = MenuCommand.EditChild;
-                                    break;
-                                case 2:
-                                    menuCommand = MenuCommand.RemoveChild;
-                                    break;
-                                case 3:
-                                    menuCommand = MenuCommand.ViewChildren;
-                                    break;
-                            }
-                        }
-
-                        if (menuStack.Peek().Menu == secondAltMenu)
-                        {
-                            switch (menuStack.Peek().PendingMenuChoice)
-                            {
-                                case 0:
-                                    menuCommand = MenuCommand.AddPresent;
-                                    break;
-                                case 1:
-                                    menuCommand = MenuCommand.CheckDemands;
-                                    break;
-                                case 2:
-                                    menuCommand = MenuCommand.MatchPresents;
-                                    break;
-                                case 3:
-                                    menuCommand = MenuCommand.ViewPresents;
-                                    break;
-                            }
-                        }
-
-                        if (menuStack.Peek().Menu == thirdAltMenu)
-                        {
-                            switch (menuStack.Peek().PendingMenuChoice)
-                            {
-                                case 0:
-                                    menuCommand = MenuCommand.SetBehavior;
-                                    break;
-                                case 1:
-                                    menuCommand = MenuCommand.MoreGingerbread;
-                                    break;
-                                case 2:
-                                    menuCommand = MenuCommand.LessGingerbread;
-                                    break;
-                                case 3:
-                                    menuCommand = MenuCommand.ViewRecords;
-                                    break;
-                            }
-                        }
-
-                        chosenCommand = menuCommand;
+                        chosenCommand = menuStack.Peek().Menu[menuStack.Peek().PendingMenuChoice].Command;
                         break;
                     }
                 }
 
                 if (keyPress.Key == ConsoleKey.Backspace)
                 {
+                    chosenCommand = MenuCommand.ClearConsole;
                     menuStack.Pop();
                 }
             }
