@@ -26,7 +26,9 @@ namespace SaintNicholas.ConsoleApp
 
                 while (true)
                 {
-                    if (Console.ReadLine().ToLower() == "y")
+                    string answer = Console.ReadLine().ToLower();
+
+                    if (answer == "y")
                     {
                         DataSeeding.CreateTestData(context);
                         Console.WriteLine("Data was added.");
@@ -34,7 +36,7 @@ namespace SaintNicholas.ConsoleApp
                         Console.ReadLine();
                         return;
                     }
-                    if (Console.ReadLine().ToLower() == "n")
+                    if (answer == "n")
                     {
                         return;
                     }

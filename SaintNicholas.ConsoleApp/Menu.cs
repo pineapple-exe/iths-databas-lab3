@@ -53,29 +53,27 @@ namespace SaintNicholas.ConsoleApp
         private static readonly string[] thirdAltMenu = new string[] { thirdFirst, thirdSecond, thirdThird, thirdFourth };
 
         private static readonly string[][] subMenuParty = new string[][] { firstAltMenu, secondAltMenu, thirdAltMenu };
-        private string[] currentMenu = mainMenu;
 
-        private static readonly string space = "              ";
-        private static readonly string spaceCursor = "            * ";
+        private Stack<MenuScreen> menuStack = new Stack<MenuScreen>();
 
-        private int pendingMenuChoice = 0;
         private Thread t;
-        private static MenuCommand chosenMenu = MenuCommand.None;
+        private static MenuCommand chosenCommand = MenuCommand.None;
 
         public Menu()
         {
+            menuStack.Push(new MenuScreen(mainMenu));
             t = new Thread(Listen);
             t.Start();
         }
 
         private void FillMenu(string[] alternatives)
         {
-            currentMenu = alternatives;
+            menuStack.Push(new MenuScreen(alternatives));
         }
 
         static void Cancel()
         {
-            chosenMenu = MenuCommand.None;
+            chosenCommand = MenuCommand.None;
             Console.Clear();
         }
 
@@ -168,24 +166,11 @@ namespace SaintNicholas.ConsoleApp
 
         public void ActivateMenu()
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine();
+            menuStack.Peek().PrintMenu();
 
-            for (int i = 0; i < currentMenu.Length; i++)
+            if (chosenCommand != MenuCommand.None)
             {
-                if (pendingMenuChoice == i)
-                {
-                    Console.WriteLine(spaceCursor + currentMenu[i]);
-                }
-                else
-                {
-                    Console.WriteLine(space + currentMenu[i]);
-                }
-            }
-
-            if (chosenMenu != MenuCommand.None)
-            {
-                ExecuteMenuChoice(chosenMenu);
+                ExecuteMenuChoice(chosenCommand);
             }
         }
 
@@ -195,37 +180,37 @@ namespace SaintNicholas.ConsoleApp
             {
                 ConsoleKeyInfo keyPress = Console.ReadKey();
 
-                if (currentMenu == mainMenu && keyPress.Key == ConsoleKey.DownArrow)
+                if (menuStack.Peek().Menu == mainMenu && keyPress.Key == ConsoleKey.DownArrow)
                 {
-                    if (pendingMenuChoice != Array.IndexOf(mainMenu, invisibilityCloak) - 1)
+                    if (menuStack.Peek().PendingMenuChoice != Array.IndexOf(mainMenu, invisibilityCloak) - 1)
                     {
-                        pendingMenuChoice++;
+                        menuStack.Peek().PendingMenuChoice++;
                     }
                 }
 
-                else if (keyPress.Key == ConsoleKey.DownArrow && pendingMenuChoice < currentMenu.Length - 1)
+                else if (keyPress.Key == ConsoleKey.DownArrow && menuStack.Peek().PendingMenuChoice < menuStack.Peek().Menu.Length - 1)
                 {
-                    pendingMenuChoice++;
+                    menuStack.Peek().PendingMenuChoice++;
                 }
 
-                if (keyPress.Key == ConsoleKey.UpArrow && pendingMenuChoice > 0)
+                if (keyPress.Key == ConsoleKey.UpArrow && menuStack.Peek().PendingMenuChoice > 0)
                 {
-                    pendingMenuChoice--;
+                    menuStack.Peek().PendingMenuChoice--;
                 }
 
                 if (keyPress.Key == ConsoleKey.Enter)
                 {
-                    if (currentMenu == mainMenu)
+                    if (menuStack.Peek().Menu == mainMenu)
                     {
-                        FillMenu(subMenuParty[pendingMenuChoice]);
+                        FillMenu(subMenuParty[menuStack.Peek().PendingMenuChoice]);
                     }
                     else
                     {
                         MenuCommand menuCommand = 0;
 
-                        if (currentMenu == firstAltMenu)
+                        if (menuStack.Peek().Menu == firstAltMenu)
                         {
-                            switch (pendingMenuChoice)
+                            switch (menuStack.Peek().PendingMenuChoice)
                             {
                                 case 0:
                                     menuCommand = MenuCommand.AddChild;
@@ -242,9 +227,9 @@ namespace SaintNicholas.ConsoleApp
                             }
                         }
 
-                        if (currentMenu == secondAltMenu)
+                        if (menuStack.Peek().Menu == secondAltMenu)
                         {
-                            switch (pendingMenuChoice)
+                            switch (menuStack.Peek().PendingMenuChoice)
                             {
                                 case 0:
                                     menuCommand = MenuCommand.AddPresent;
@@ -261,9 +246,9 @@ namespace SaintNicholas.ConsoleApp
                             }
                         }
 
-                        if (currentMenu == thirdAltMenu)
+                        if (menuStack.Peek().Menu == thirdAltMenu)
                         {
-                            switch (pendingMenuChoice)
+                            switch (menuStack.Peek().PendingMenuChoice)
                             {
                                 case 0:
                                     menuCommand = MenuCommand.SetBehavior;
@@ -280,18 +265,14 @@ namespace SaintNicholas.ConsoleApp
                             }
                         }
 
-                        chosenMenu = menuCommand;
+                        chosenCommand = menuCommand;
                         break;
                     }
                 }
 
                 if (keyPress.Key == ConsoleKey.Backspace)
                 {
-                    if (pendingMenuChoice == Array.IndexOf(mainMenu, invisibilityCloak))
-                    {
-                        pendingMenuChoice--;
-                    }
-                    FillMenu(mainMenu);
+                    menuStack.Pop();
                 }
             }
         }
