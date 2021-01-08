@@ -71,9 +71,9 @@ namespace SaintNicholas.ConsoleApp
         private static readonly MenuAlternative[] thirdAltMenu = new MenuAlternative[]
         {
             new MenuAlternative(thirdFirst, MenuCommand.SetBehavior),
-            new MenuAlternative(thirdSecond, MenuCommand.AddPresent),
-            new MenuAlternative(thirdThird, MenuCommand.AddPresent),
-            new MenuAlternative(thirdFourth, MenuCommand.AddPresent)
+            new MenuAlternative(thirdSecond, MenuCommand.LessGingerbread),
+            new MenuAlternative(thirdThird, MenuCommand.MoreGingerbread),
+            new MenuAlternative(thirdFourth, MenuCommand.ViewRecords)
         };
 
         private static readonly MenuAlternative[][] subMenuParty = new MenuAlternative[][]
@@ -83,7 +83,7 @@ namespace SaintNicholas.ConsoleApp
             thirdAltMenu
         };
 
-        private Stack<MenuScreen> menuStack = new Stack<MenuScreen>();
+        private readonly Stack<MenuScreen> menuStack = new Stack<MenuScreen>();
 
         private Thread t;
         private static MenuCommand chosenCommand = MenuCommand.None;
@@ -110,28 +110,18 @@ namespace SaintNicholas.ConsoleApp
         {
             Console.Clear();
 
-            string[] propertyValuesC = new string[6];
-            int[] columnWidthsC = new int[] { 5, 20, 6, 25, 10, 15, 20 };
-            var headerC = new List<string>() { "Id", "Name", "Gender", "StreetAddress", "PostalCode", "City", "Country" };
-
-            int[] columnWidthsP = new int[] { 5, 23, 9, 15, 10, 11 };
-            var headerP = new List<string>() { "Id", "Contents", "ForGender", "ForNaughtyChild", "ReceiverId", "HandOutYear" };
-
-            int[] columnWidthsR = new int[] { 7, 5, 7 };
-            var headerR = new List<string>() { "ChildID", "Year", "Naughty" };
-
             SaintNicholasDbContext context = new SaintNicholasDbContext();
 
             switch (menuCommand)
             {
                 case MenuCommand.AddChild:
 
-                    ChildrenFunctions.AddChild(context, propertyValuesC);
+                    ChildrenFunctions.AddChild(context);
                     break;
 
                 case MenuCommand.EditChild:
 
-                    ChildrenFunctions.EditChild(context, propertyValuesC);
+                    ChildrenFunctions.EditChild(context);
                     break;
 
                 case MenuCommand.RemoveChild:
@@ -141,7 +131,7 @@ namespace SaintNicholas.ConsoleApp
 
                 case MenuCommand.ViewChildren:
 
-                    ChildrenFunctions.ViewChildren(context, columnWidthsC, headerC);
+                    ChildrenFunctions.ViewChildren(context);
                     break;
 
 
@@ -163,7 +153,7 @@ namespace SaintNicholas.ConsoleApp
 
                 case MenuCommand.ViewPresents:
 
-                    ChristmasPresentsFunctions.ViewPresents(context, columnWidthsP, headerP);
+                    ChristmasPresentsFunctions.ViewPresents(context);
                     break;
 
 
@@ -175,17 +165,17 @@ namespace SaintNicholas.ConsoleApp
 
                 case MenuCommand.MoreGingerbread:
 
-                    BehavioralRecordsFunctions.CheckGingerBreadDemand(context, true, columnWidthsC, headerC);
+                    BehavioralRecordsFunctions.CheckGingerBreadDemand(context, true);
                     break;
 
                 case MenuCommand.LessGingerbread:
 
-                    BehavioralRecordsFunctions.CheckGingerBreadDemand(context, false, columnWidthsC, headerC);
+                    BehavioralRecordsFunctions.CheckGingerBreadDemand(context, false);
                     break;
 
                 case MenuCommand.ViewRecords:
 
-                    BehavioralRecordsFunctions.ViewRecords(context, columnWidthsR, headerR);
+                    BehavioralRecordsFunctions.ViewRecords(context);
                     break;
 
 

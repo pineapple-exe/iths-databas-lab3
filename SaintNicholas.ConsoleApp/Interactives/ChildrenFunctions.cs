@@ -3,14 +3,15 @@ using SaintNicholas.Data;
 using SaintNicholas.Data.DataHandlers;
 using SaintNicholas.Data.Entities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SaintNicholas.ConsoleApp.Interactives
 {
     class ChildrenFunctions
     {
-        public static void AddChild(SaintNicholasDbContext context, string[] propertyValues)
+        static readonly string[] propertyValues = new string[6];
+
+        public static void AddChild(SaintNicholasDbContext context)
         {
             Console.WriteLine("Enter empty string to cancel this process.");
 
@@ -28,7 +29,7 @@ namespace SaintNicholas.ConsoleApp.Interactives
             Console.ReadLine();
         }
 
-        public static void EditChild(SaintNicholasDbContext context, string[] propertyValues)
+        public static void EditChild(SaintNicholasDbContext context)
         {
             string initialQ = "Specify Id of the child you wish to edit.";
             if (!Validators.RepeatableReadline(initialQ, Validators.ChildValidator, out string id))
@@ -83,9 +84,9 @@ namespace SaintNicholas.ConsoleApp.Interactives
             Console.ReadLine();
         }
 
-        public static void ViewChildren(SaintNicholasDbContext context, int[] columnWidths, List<string> header)
+        public static void ViewChildren(SaintNicholasDbContext context)
         {
-            ChildrenScreens.ProvideChildrensTable(context, columnWidths, header);
+            ChildrenScreens.ProvideAllChildren(context);
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to return to menu.");

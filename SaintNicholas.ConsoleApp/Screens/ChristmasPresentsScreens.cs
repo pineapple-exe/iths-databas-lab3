@@ -8,6 +8,9 @@ namespace SaintNicholas.ConsoleApp.Screens
 {
     class ChristmasPresentsScreens
     {
+        static readonly List<string> headerP = new List<string>() { "Id", "Contents", "ForGender", "ForNaughtyChild", "ReceiverId", "HandOutYear" };
+        static readonly int[] columnWidthsP = new int[] { 5, 23, 9, 15, 10, 11 };
+
         private static void DemandsDetails(int[] behavioralDemands, Dictionary<Gender, int>[] genderedDemands, params string[] typeNotes)
         {
             for (int i = 0; i < behavioralDemands.Length; i++)
@@ -40,30 +43,30 @@ namespace SaintNicholas.ConsoleApp.Screens
             }
         }
 
-        private static List<string> ChristmasPresentStrings(List<ChristmasPresent> thePresents, int[] columnWidths)
+        private static List<string> ChristmasPresentStrings(List<ChristmasPresent> thePresents)
         {
             var theStrings = new List<string>();
             foreach (ChristmasPresent p in thePresents)
             {
                 var christmasPresentValues = new List<string>
                 {
-                    Utils.Ellipsis(p.Id.ToString(), columnWidths[0]),
-                    Utils.Ellipsis(p.Contents.ToString(), columnWidths[1]),
-                    Utils.Ellipsis(p.ForGender.ToString(), columnWidths[2]),
-                    Utils.Ellipsis(p.ForNaughtyChild.ToString(), columnWidths[3]),
-                    Utils.Ellipsis(p.ReceiverId.ToString(), columnWidths[4]),
-                    Utils.Ellipsis(p.HandOutYear.ToString(), columnWidths[5])
+                    Utils.Ellipsis(p.Id.ToString(), columnWidthsP[0]),
+                    Utils.Ellipsis(p.Contents.ToString(), columnWidthsP[1]),
+                    Utils.Ellipsis(p.ForGender.ToString(), columnWidthsP[2]),
+                    Utils.Ellipsis(p.ForNaughtyChild.ToString(), columnWidthsP[3]),
+                    Utils.Ellipsis(p.ReceiverId.ToString(), columnWidthsP[4]),
+                    Utils.Ellipsis(p.HandOutYear.ToString(), columnWidthsP[5])
                 };
-                theStrings.Add(Utils.BuildRow(christmasPresentValues, columnWidths));
+                theStrings.Add(Utils.BuildRow(christmasPresentValues, columnWidthsP));
             }
             return theStrings;
         }
 
-        public static void ProvidePresentsTable(SaintNicholasDbContext context, int[] columnWidths, List<string> header)
+        public static void ProvidePresentsTable(SaintNicholasDbContext context)
         {
-            List<string> rows = ChristmasPresentStrings(ChristmasPresentsHandler.PresentsTable(context), columnWidths);
+            List<string> rows = ChristmasPresentStrings(ChristmasPresentsHandler.PresentsTable(context));
 
-            Utils.PrintTable(columnWidths, header, rows);
+            Utils.PrintTable(columnWidthsP, headerP, rows);
         }
     }
 }

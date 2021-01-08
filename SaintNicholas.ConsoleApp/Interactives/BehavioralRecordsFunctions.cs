@@ -2,7 +2,6 @@
 using SaintNicholas.Data;
 using SaintNicholas.Data.DataHandlers;
 using System;
-using System.Collections.Generic;
 
 namespace SaintNicholas.ConsoleApp.Interactives
 {
@@ -28,18 +27,18 @@ namespace SaintNicholas.ConsoleApp.Interactives
             }
         }
 
-        public static void CheckGingerBreadDemand(SaintNicholasDbContext context, bool naughty, int[] columnWidths, List<string> header)
+        public static void CheckGingerBreadDemand(SaintNicholasDbContext context, bool naughty)
         {
-            BehavioralRecordsScreens.GingerBreadScreen(context, naughty, columnWidths, header);
+            BehavioralRecordsScreens.GingerBreadScreen(context, naughty);
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to return to menu.");
             Console.ReadLine();
         }
 
-        public static void ViewRecords(SaintNicholasDbContext context, int[] columnWidths, List<string> header)
+        public static void ViewRecords(SaintNicholasDbContext context)
         {
-            BehavioralRecordsScreens.ProvideRecordsTable(context, columnWidths, header);
+            BehavioralRecordsScreens.ProvideRecordsTable(context);
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to return to menu.");

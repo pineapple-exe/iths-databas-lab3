@@ -66,9 +66,9 @@ namespace SaintNicholas.ConsoleApp.Interactives
             Console.ReadLine();
         }
 
-        public static void ViewPresents(SaintNicholasDbContext context, int[] columnWidths, List<string> header)
+        public static void ViewPresents(SaintNicholasDbContext context)
         {
-            ChristmasPresentsScreens.ProvidePresentsTable(context, columnWidths, header);
+            ChristmasPresentsScreens.ProvidePresentsTable(context);
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to return to menu.");
