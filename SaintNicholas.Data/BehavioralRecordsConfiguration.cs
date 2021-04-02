@@ -10,7 +10,7 @@ namespace SaintNicholas.Data
         {
             builder.HasKey(e => new { e.ChildID, e.Year });
 
-            builder.Property(e => e.ChildID); //foreign key osv???
+            builder.Property(e => e.ChildID);
 
             builder.Property(e => e.Year).IsRequired();
 
